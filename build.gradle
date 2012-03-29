@@ -1,0 +1,42 @@
+apply plugin: "groovy"
+
+version = "0.6"
+description = "Spock Framework - Example Project"
+
+// Spock works with Java 1.5 and above
+sourceCompatibility = 1.5
+
+repositories {
+  // Spock releases are available from Maven Central
+  mavenCentral()
+  // Spock development snapshots are available from Spock's Maven repo
+  maven { url "http://m2repo.spockframework.org/snapshots" }
+}
+
+dependencies {
+  // mandatory dependencies for using Spock
+  groovy "org.codehaus.groovy:groovy-all:1.8.6"
+  testCompile "org.spockframework:spock-core:0.6-groovy-1.8"
+
+  // optional dependencies for using Spock
+  testCompile "org.hamcrest:hamcrest-core:1.2" // only necessary if Hamcrest matchers are used
+  testRuntime "cglib:cglib-nodep:2.2"          // allows mocking of classes (in addition to interfaces)
+  testRuntime "org.objenesis:objenesis:1.2"    // allows mocking of classes without default constructor (together with CGLIB)
+
+  // dependencies used by examples in this project
+  testRuntime "com.h2database:h2:1.3.164"
+}
+
+// the remaining configuration is specific to this project, and is not required for using Spock
+
+apply from: "gradle/ide.gradle"
+
+task collectJars(type: Copy) {
+    into "$buildDir/output/lib"
+    from configurations.testRuntime
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = "1.0-milestone-9"
+}
+
